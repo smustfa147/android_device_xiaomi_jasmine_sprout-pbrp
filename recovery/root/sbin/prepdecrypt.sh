@@ -91,12 +91,14 @@ cp /v/lib64/hw/bootctrl.sdm660.so /vendor/lib64/hw/
 cp /v/lib64/hw/android.hardware.boot@1.0-impl.so /vendor/lib64/hw/
 cp /v/lib64/hw/android.hardware.gatekeeper@1.0-impl-qti.so /vendor/lib64/hw/
 cp /v/lib64/hw/android.hardware.keymaster@3.0-impl-qti.so /vendor/lib64/hw/
+cp /v/lib64/hw/android.hardware.keymaster@4.0-impl-qti.so /vendor/lib64/hw/
 
 cp /v/manifest.xml /vendor/
 cp /v/compatibility_matrix.xml /vendor/
 
 relink /v/bin/hw/android.hardware.boot@1.0-service
 relink /v/bin/hw/android.hardware.keymaster@3.0-service-qti
+relink /v/bin/hw/android.hardware.keymaster@4.0-service-qti
 relink /v/bin/hw/android.hardware.gatekeeper@1.0-service-qti
 
 finish

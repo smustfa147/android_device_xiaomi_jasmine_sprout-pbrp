@@ -77,6 +77,12 @@ service keystore /sbin/keystore /tmp/misc/keystore
     disabled
     seclabel u:r:recovery:s0
 	writepid /dev/cpuset/foreground/tasks
+	
+service gatekeeper-1-0 /sbin/android.hardware.gatekeeper@1.0-service-qti
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
 
 service vendor.boot-hal-1-0 /sbin/android.hardware.boot@1.0-service
     user root
@@ -85,6 +91,12 @@ service vendor.boot-hal-1-0 /sbin/android.hardware.boot@1.0-service
     seclabel u:r:recovery:s0
 
 service keymaster-4-0 /sbin/android.hardware.keymaster@4.0-service-qti
+    user root
+    group root
+    disabled
+    seclabel u:r:recovery:s0
+	
+service keymaster-3-0 /sbin/android.hardware.keymaster@3.0-service-qti
     user root
     group root
     disabled
@@ -99,11 +111,26 @@ on init
     start vendor.boot-hal-1-0
     start prepdecrypt
 
+on property:crypto.ready=0
+    stop sbinqseecomd
+    stop keymaster-3-0
+    stop keymaster-4-0
+    stop gatekeeper-1-0
+    stop servicemanager	
+	
 on property:prep.decrypt=1
     start sbinqseecomd
     start hwservicemanager
     start servicemanager
+    start keymaster-3-0
     start keymaster-4-0
+    start gatekeeper-1-0
+
+on property:sys.listeners.registered=true
+    start keymaster-3-0
+    start keymaster-4-0
+    start gatekeeper-1-0
+    start servicemanager
 	
     mkdir /config
     mount configfs none /config
@@ -133,5 +160,5 @@ on property:sys.usb.ffs.ready=1
     write /config/usb_gadget/g1/UDC ${sys.usb.controller}	
 	
 on init 
-    write /sys/class/backlight/panel0-backlight/brightness 200
+    write /sys/class/backlight/panel0-backlight/brightness 255
 	
